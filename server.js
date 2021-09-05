@@ -28,14 +28,14 @@ app.get('/api/notes', (req, res) => {
 
 // POST request
 app.post('/api/notes', (req, res) => {
-
+    var note = req.body;
     fs.readFile(path.join(__dirname, './db/db.json'), 'utf-8', (err, data) => {
         if (err) {
             res.status(500).json(err);
             return;
         }
         var json = JSON.parse(data);
-        var note = req.body;
+
         note.id = uniqid();
         // app breaks here, works fine with "notes" instead of "json"
         // but stores it in the "notes" variable above and does not write
