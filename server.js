@@ -17,6 +17,19 @@ app.use(express.json());
 // dont get rid of this
 // const { notes } = require('./db/db');
 
+// HTML routes
+
+// /notes
+app.get('/notes', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/notes.html'));
+})
+
+// catch-all
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/index.html'));
+  });
+
+
 // get request
 app.get('/api/notes', (req, res) => {
     fs.readFile(path.join(__dirname, './db/db.json'), 'utf-8', function (err, data) {
@@ -34,16 +47,16 @@ app.post('/api/notes', (req, res) => {
             res.status(500).json(err);
             return;
         }
-        var json = JSON.parse(data);
+        var parse = JSON.parse(data);
 
         note.id = uniqid();
         // app breaks here, works fine with "notes" instead of "json"
         // but stores it in the "notes" variable above and does not write
         // to json file
-        json.push(note);
+        parse.push(note);
 
         fs.writeFile(path.join(__dirname, './db/db.json'), 
-        JSON.stringify(json), (err) => {
+        JSON.stringify(parse), (err) => {
             if (err) {
                 console.log(err);
                 return;
@@ -54,17 +67,6 @@ app.post('/api/notes', (req, res) => {
     });
 });
 
-// HTML routes
-
-// /notes
-app.get('/notes', (req, res) => {
-    res.sendFile(path.join(__dirname, './public/notes.html'));
-})
-
-// catch-all
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, './public/index.html'));
-  });
 
 // start server, goes at bottom
 
