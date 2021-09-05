@@ -4,7 +4,7 @@ const PORT = process.env.PORT || 3001;
 const app = express();
 const fs = require('fs');
 const path = require('path');
-app.use(express.static("/public"));
+app.use(express.static("public"));
 const uniqid = require('uniqid');
 
 // middleware to parse incoming data
@@ -37,6 +37,9 @@ app.post('/api/notes', (req, res) => {
         var json = JSON.parse(data);
         var note = req.body;
         note.id = uniqid();
+        // app breaks here, works fine with "notes" instead of "json"
+        // but stores it in the "notes" variable above and does not write
+        // to json file
         json.push(note);
 
         fs.writeFile(path.join(__dirname, './db/db.json'), 
@@ -50,6 +53,18 @@ app.post('/api/notes', (req, res) => {
         });
     });
 });
+
+// HTML routes
+
+// /notes
+app.get('/notes', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/notes.html'));
+})
+
+// catch-all
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/index.html'));
+  });
 
 // start server, goes at bottom
 
