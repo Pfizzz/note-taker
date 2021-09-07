@@ -24,10 +24,7 @@ app.get('/notes', (req, res) => {
     res.sendFile(path.join(__dirname, './public/notes.html'));
 })
 
-// catch-all
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, './public/index.html'));
-  });
+
 
 
 // get request
@@ -53,6 +50,7 @@ app.post('/api/notes', (req, res) => {
         // app breaks here, works fine with "notes" instead of "json"
         // but stores it in the "notes" variable above and does not write
         // to json file
+        console.log(parse);
         parse.push(note);
 
         fs.writeFile(path.join(__dirname, './db/db.json'), 
@@ -67,7 +65,11 @@ app.post('/api/notes', (req, res) => {
     });
 });
 
-
+// catch-all
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/index.html'));
+  });
+  
 // start server, goes at bottom
 
 app.listen(PORT, () => {
